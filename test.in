@@ -1,0 +1,5 @@
+@bindir@
+@datadir@
+@srcdir@
+@gcc_version@
+   @subst_file@   

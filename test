@@ -1,0 +1,5 @@
+${exec_prefix}/bin
+${prefix}/share
+.
+4.88
+   @subst_file@   

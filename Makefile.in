@@ -1,0 +1,5 @@
+@prefix@
+@bindir@
+@datadir@
+@subst_file@
+@CFLAGS@
