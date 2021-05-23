@@ -1,6 +1,11 @@
 #include <stdio.h>
+#include "config.h"
+#include "arg_parse.h"
 
 int main(int argc, char *argv[])
 {
-	printf("Hello world, This is my first project\n");
+
+	parse_args(argc, argv);
+
+	return 0;	
 }
