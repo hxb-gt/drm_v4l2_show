@@ -3,6 +3,12 @@
 /* year in copyright message */
 #undef COPYRIGHT_YEAR
 
+/* DEFINE to 1 if you have debug program. */
+#undef DEBUG
+
+/* DEFINE to 1 if you have use fbdev subsystem. */
+#undef FBDEV
+
 /* Define to 1 if you have the <getopt.h> header file. */
 #undef HAVE_GETOPT_H
 

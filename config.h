@@ -4,6 +4,12 @@
 /* year in copyright message */
 #define COPYRIGHT_YEAR 2021
 
+/* DEFINE to 1 if you have debug program. */
+#define DEBUG 1
+
+/* DEFINE to 1 if you have use fbdev subsystem. */
+#define FBDEV 1
+
 /* Define to 1 if you have the <getopt.h> header file. */
 #define HAVE_GETOPT_H 1
 

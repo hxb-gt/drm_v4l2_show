@@ -284,6 +284,7 @@ target_alias =
 top_build_prefix = ../
 top_builddir = ..
 top_srcdir = ..
+v4l2todrm = 
 noinst_LIBRARIES = libdrmv4l2demo.a
 libdrmv4l2demo_a_SOURCES = progname.c
 include_HEADERS = progname.h

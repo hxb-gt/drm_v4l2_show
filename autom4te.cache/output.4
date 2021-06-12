@@ -626,6 +626,7 @@ ac_subst_vars='am__EXEEXT_FALSE
 am__EXEEXT_TRUE
 LTLIBOBJS
 LIB@&t@OBJS
+v4l2todrm
 EGREP
 GREP
 CPP
@@ -720,6 +721,9 @@ ac_user_opts='
 enable_option_checking
 enable_silent_rules
 enable_dependency_tracking
+enable_v4l2todrm
+enable_debug
+enable_fbdev
 '
       ac_precious_vars='build_alias
 host_alias
@@ -1361,6 +1365,9 @@ Optional Features:
                           do not reject slow dependency extractors
   --disable-dependency-tracking 
                           speeds up one-time build
+  --enable-v4l2todrm      enable data from v4l2 to drm show
+  --enable-debug          Enable debug informations (default: Not enabled)
+  --disable-fbdev         enable fbdev subsystem (default: disabled)
 
 Some influential environment variables:
   CC          C compiler command
@@ -4389,6 +4396,31 @@ $as_echo "@%:@define COPYRIGHT_YEAR 2021
 
 
 # Checks for library functions.
+
+# Options for build
+@%:@ Check whether --enable-v4l2todrm was given.
+if test "${enable_v4l2todrm+set}" = set; then :
+  enableval=$enable_v4l2todrm; v4l2todrm=yes
+
+fi
+
+@%:@ Check whether --enable-debug was given.
+if test "${enable_debug+set}" = set; then :
+  enableval=$enable_debug; 
+$as_echo "@%:@define DEBUG 1" >>confdefs.h
+
+fi
+
+@%:@ Check whether --enable-fbdev was given.
+if test "${enable_fbdev+set}" = set; then :
+  enableval=$enable_fbdev; fbdev=no
+fi
+
+if test xno != "x$fbdev"; then :
+  
+$as_echo "@%:@define FBDEV 1" >>confdefs.h
+
+fi
 
 ac_config_headers="$ac_config_headers config.h"
 

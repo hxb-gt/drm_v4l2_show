@@ -14,6 +14,8 @@
 
 
 
+#AUTOMAKE_OPTIONS = subdir-objects
+
 
 am__is_gnu_make = { \
   if test -z '$(MAKELEVEL)'; then \
@@ -99,7 +101,8 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_drm_v4l2_demo_OBJECTS = main.$(OBJEXT) arg_parse.$(OBJEXT)
+am_drm_v4l2_demo_OBJECTS = main.$(OBJEXT) log.$(OBJEXT) \
+	arg_parse.$(OBJEXT) fbdev_init.$(OBJEXT)
 drm_v4l2_demo_OBJECTS = $(am_drm_v4l2_demo_OBJECTS)
 drm_v4l2_demo_DEPENDENCIES = $(top_srcdir)/lib/libdrmv4l2demo.a
 AM_V_P = $(am__v_P_$(V))
@@ -249,12 +252,14 @@ target_alias =
 top_build_prefix = ../
 top_builddir = ..
 top_srcdir = ..
-drm_v4l2_demo_SOURCES = main.c arg_parse.c 
-BUILT_SOURCES = $(top_srcdir)/lib/libdrmv4l2demo.a
+v4l2todrm = 
+
+#fbdev subsystem
+drm_v4l2_demo_SOURCES = main.c log.c log.h arg_parse.c arg_parse.h \
+	fbdev_init.c fbdev.h
 drm_v4l2_demo_LDADD = $(top_srcdir)/lib/libdrmv4l2demo.a
 AM_CPPFLAGS = -I$(top_srcdir)/lib
-all: $(BUILT_SOURCES)
-	$(MAKE) $(AM_MAKEFLAGS) all-am
+all: all-am
 
 .SUFFIXES:
 .SUFFIXES: .c .o .obj
@@ -341,6 +346,8 @@ distclean-compile:
 	-rm -f *.tab.c
 
 include ./$(DEPDIR)/arg_parse.Po
+include ./$(DEPDIR)/fbdev_init.Po
+include ./$(DEPDIR)/log.Po
 include ./$(DEPDIR)/main.Po
 
 .c.o:
@@ -440,15 +447,13 @@ distdir: $(DISTFILES)
 	  fi; \
 	done
 check-am: all-am
-check: $(BUILT_SOURCES)
-	$(MAKE) $(AM_MAKEFLAGS) check-am
+check: check-am
 all-am: Makefile $(PROGRAMS)
 installdirs:
 	for dir in "$(DESTDIR)$(bindir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
-install: $(BUILT_SOURCES)
-	$(MAKE) $(AM_MAKEFLAGS) install-am
+install: install-am
 install-exec: install-exec-am
 install-data: install-data-am
 uninstall: uninstall-am
@@ -478,7 +483,6 @@ distclean-generic:
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
-	-test -z "$(BUILT_SOURCES)" || rm -f $(BUILT_SOURCES)
 clean: clean-am
 
 clean-am: clean-binPROGRAMS clean-generic mostlyclean-am
@@ -548,7 +552,7 @@ ps-am:
 
 uninstall-am: uninstall-binPROGRAMS
 
-.MAKE: all check install install-am install-strip
+.MAKE: install-am install-strip
 
 .PHONY: CTAGS GTAGS TAGS all all-am check check-am clean \
 	clean-binPROGRAMS clean-generic cscopelist-am ctags ctags-am \

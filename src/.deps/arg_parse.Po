@@ -56,8 +56,13 @@ arg_parse.o: arg_parse.c /usr/include/stdc-predef.h /usr/include/stdio.h \
  /usr/include/alloca.h \
  /usr/include/x86_64-linux-gnu/bits/stdlib-bsearch.h \
  /usr/include/x86_64-linux-gnu/bits/stdlib-float.h \
- /usr/include/x86_64-linux-gnu/bits/stdlib.h ../config.h \
- ../lib/progname.h /usr/include/getopt.h \
+ /usr/include/x86_64-linux-gnu/bits/stdlib.h /usr/include/string.h \
+ /usr/include/x86_64-linux-gnu/bits/types/locale_t.h \
+ /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h \
+ /usr/include/strings.h \
+ /usr/include/x86_64-linux-gnu/bits/strings_fortified.h \
+ /usr/include/x86_64-linux-gnu/bits/string_fortified.h ../config.h \
+ ../lib/progname.h log.h misc.h /usr/include/getopt.h \
  /usr/include/x86_64-linux-gnu/bits/getopt_ext.h
 
 /usr/include/stdc-predef.h:
@@ -190,9 +195,25 @@ arg_parse.o: arg_parse.c /usr/include/stdc-predef.h /usr/include/stdio.h \
 
 /usr/include/x86_64-linux-gnu/bits/stdlib.h:
 
+/usr/include/string.h:
+
+/usr/include/x86_64-linux-gnu/bits/types/locale_t.h:
+
+/usr/include/x86_64-linux-gnu/bits/types/__locale_t.h:
+
+/usr/include/strings.h:
+
+/usr/include/x86_64-linux-gnu/bits/strings_fortified.h:
+
+/usr/include/x86_64-linux-gnu/bits/string_fortified.h:
+
 ../config.h:
 
 ../lib/progname.h:
+
+log.h:
+
+misc.h:
 
 /usr/include/getopt.h:
 

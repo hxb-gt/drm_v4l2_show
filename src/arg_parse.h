@@ -6,9 +6,10 @@ extern "C" {
 #endif
 
 extern int debug;
-parse_args(int argc, char *argv[]);
+void parse_args(int argc, char *argv[]);
 
 #ifdef __cpluscplus
 }
 #endif
+
 #endif
