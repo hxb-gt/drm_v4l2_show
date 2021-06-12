@@ -2,9 +2,11 @@
 #include <unistd.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "config.h"
 #include "progname.h"
+#include "log.h"
 
 #if HAVE_GETOPT_H
 #include <getopt.h>
@@ -12,14 +14,12 @@
 
 static const struct option longopts[] = {
   {"help", no_argument, NULL, 'h'},
-  {"greeting", required_argument, NULL, 'd'},
+  {"debug", required_argument, NULL, 'd'},
   {"version", no_argument, NULL, 'v'},
   {NULL, 0, NULL, 0}
 };
 
 static const char *optstring = "hd:v";
-
-int debug;
 
 static void print_help (void);
 static void print_version (void);
@@ -42,7 +42,10 @@ void parse_args(int argc, char *argv[])
 			print_help();
 			break;
 		case 'd':
-			debug = 1;
+			if(debug_level_parse(optarg)) {
+				print_help();
+				exit(-1);
+			}
 			break;
 		case 'v':
 			print_version();
@@ -51,7 +54,6 @@ void parse_args(int argc, char *argv[])
 			printf("opttion %c must have a parameter\n", (uint8_t)optopt);
 			print_help();
 			exit(-1);
-			break;
 		case '?':
 			printf("opttion %c is incognizant\n", (uint8_t)optopt);
 			print_help();

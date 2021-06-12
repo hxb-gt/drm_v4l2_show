@@ -14,6 +14,8 @@
 
 
 
+#AUTOMAKE_OPTIONS = subdir-objects
+
 
 am__is_gnu_make = { \
   if test -z '$(MAKELEVEL)'; then \
@@ -99,9 +101,15 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_drm_v4l2_demo_OBJECTS = main.$(OBJEXT) arg_parse.$(OBJEXT)
+am_drm_v4l2_demo_OBJECTS = drm_v4l2_demo-main.$(OBJEXT) \
+	drm_v4l2_demo-log.$(OBJEXT) drm_v4l2_demo-arg_parse.$(OBJEXT) \
+	drm_v4l2_demo-fbdev_init.$(OBJEXT)
 drm_v4l2_demo_OBJECTS = $(am_drm_v4l2_demo_OBJECTS)
-drm_v4l2_demo_DEPENDENCIES = $(top_srcdir)/lib/libdrmv4l2demo.a
+am__DEPENDENCIES_1 =
+drm_v4l2_demo_DEPENDENCIES = $(top_srcdir)/lib/libdrmv4l2demo.a \
+	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
+drm_v4l2_demo_LINK = $(CCLD) $(drm_v4l2_demo_CFLAGS) $(CFLAGS) \
+	$(AM_LDFLAGS) $(LDFLAGS) -o $@
 AM_V_P = $(am__v_P_$(V))
 am__v_P_ = $(am__v_P_$(AM_DEFAULT_VERBOSITY))
 am__v_P_0 = false
@@ -118,6 +126,10 @@ DEFAULT_INCLUDES = -I. -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
 am__mv = mv -f
+AM_V_lt = $(am__v_lt_$(V))
+am__v_lt_ = $(am__v_lt_$(AM_DEFAULT_VERBOSITY))
+am__v_lt_0 = --silent
+am__v_lt_1 = 
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 AM_V_CC = $(am__v_CC_$(V))
@@ -179,6 +191,8 @@ ECHO_N = -n
 ECHO_T = 
 EGREP = /bin/grep -E
 EXEEXT = 
+GLIB_CFLAGS = -pthread -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include
+GLIB_LIBS = -lgio-2.0 -lgobject-2.0 -lglib-2.0
 GREP = /bin/grep
 INSTALL = /usr/bin/install -c
 INSTALL_DATA = ${INSTALL} -m 644
@@ -188,6 +202,8 @@ INSTALL_STRIP_PROGRAM = $(install_sh) -c -s
 LDFLAGS = 
 LIBOBJS = 
 LIBS = 
+LIBUDEV_CFLAGS = 
+LIBUDEV_LIBS = -ludev
 LTLIBOBJS = 
 MAKEINFO = ${SHELL} /home/hxb/works/opensource_package/drm_v4l2_show/missing makeinfo
 MKDIR_P = /bin/mkdir -p
@@ -200,6 +216,9 @@ PACKAGE_TARNAME = drm_v4l2_demo
 PACKAGE_URL = hxb-gt
 PACKAGE_VERSION = 1.0.0
 PATH_SEPARATOR = :
+PKG_CONFIG = /usr/bin/pkg-config
+PKG_CONFIG_LIBDIR = 
+PKG_CONFIG_PATH = 
 RANLIB = ranlib
 SET_MAKE = 
 SHELL = /bin/bash
@@ -249,12 +268,21 @@ target_alias =
 top_build_prefix = ../
 top_builddir = ..
 top_srcdir = ..
-drm_v4l2_demo_SOURCES = main.c arg_parse.c 
-BUILT_SOURCES = $(top_srcdir)/lib/libdrmv4l2demo.a
-drm_v4l2_demo_LDADD = $(top_srcdir)/lib/libdrmv4l2demo.a
+v4l2todrm = 
+
+#fbdev subsystem
+drm_v4l2_demo_SOURCES = main.c log.c log.h arg_parse.c arg_parse.h \
+	fbdev_init.c fbdev.h
+drm_v4l2_demo_CFLAGS = \
+	$(LIBUDEV_CFLAGS) \
+	$(GLIB_CFLAGS)
+
+drm_v4l2_demo_LDADD = $(top_srcdir)/lib/libdrmv4l2demo.a \
+	$(LIBUDEV_LIBS) \
+	$(GLIB_LIBS)
+
 AM_CPPFLAGS = -I$(top_srcdir)/lib
-all: $(BUILT_SOURCES)
-	$(MAKE) $(AM_MAKEFLAGS) all-am
+all: all-am
 
 .SUFFIXES:
 .SUFFIXES: .c .o .obj
@@ -332,7 +360,7 @@ clean-binPROGRAMS:
 
 drm_v4l2_demo$(EXEEXT): $(drm_v4l2_demo_OBJECTS) $(drm_v4l2_demo_DEPENDENCIES) $(EXTRA_drm_v4l2_demo_DEPENDENCIES) 
 	@rm -f drm_v4l2_demo$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(drm_v4l2_demo_OBJECTS) $(drm_v4l2_demo_LDADD) $(LIBS)
+	$(AM_V_CCLD)$(drm_v4l2_demo_LINK) $(drm_v4l2_demo_OBJECTS) $(drm_v4l2_demo_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -340,8 +368,10 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-include ./$(DEPDIR)/arg_parse.Po
-include ./$(DEPDIR)/main.Po
+include ./$(DEPDIR)/drm_v4l2_demo-arg_parse.Po
+include ./$(DEPDIR)/drm_v4l2_demo-fbdev_init.Po
+include ./$(DEPDIR)/drm_v4l2_demo-log.Po
+include ./$(DEPDIR)/drm_v4l2_demo-main.Po
 
 .c.o:
 	$(AM_V_CC)$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -356,6 +386,62 @@ include ./$(DEPDIR)/main.Po
 #	$(AM_V_CC)source='$<' object='$@' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
 #	$(AM_V_CC_no)$(COMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
+
+drm_v4l2_demo-main.o: main.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(drm_v4l2_demo_CFLAGS) $(CFLAGS) -MT drm_v4l2_demo-main.o -MD -MP -MF $(DEPDIR)/drm_v4l2_demo-main.Tpo -c -o drm_v4l2_demo-main.o `test -f 'main.c' || echo '$(srcdir)/'`main.c
+	$(AM_V_at)$(am__mv) $(DEPDIR)/drm_v4l2_demo-main.Tpo $(DEPDIR)/drm_v4l2_demo-main.Po
+#	$(AM_V_CC)source='main.c' object='drm_v4l2_demo-main.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(drm_v4l2_demo_CFLAGS) $(CFLAGS) -c -o drm_v4l2_demo-main.o `test -f 'main.c' || echo '$(srcdir)/'`main.c
+
+drm_v4l2_demo-main.obj: main.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(drm_v4l2_demo_CFLAGS) $(CFLAGS) -MT drm_v4l2_demo-main.obj -MD -MP -MF $(DEPDIR)/drm_v4l2_demo-main.Tpo -c -o drm_v4l2_demo-main.obj `if test -f 'main.c'; then $(CYGPATH_W) 'main.c'; else $(CYGPATH_W) '$(srcdir)/main.c'; fi`
+	$(AM_V_at)$(am__mv) $(DEPDIR)/drm_v4l2_demo-main.Tpo $(DEPDIR)/drm_v4l2_demo-main.Po
+#	$(AM_V_CC)source='main.c' object='drm_v4l2_demo-main.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(drm_v4l2_demo_CFLAGS) $(CFLAGS) -c -o drm_v4l2_demo-main.obj `if test -f 'main.c'; then $(CYGPATH_W) 'main.c'; else $(CYGPATH_W) '$(srcdir)/main.c'; fi`
+
+drm_v4l2_demo-log.o: log.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(drm_v4l2_demo_CFLAGS) $(CFLAGS) -MT drm_v4l2_demo-log.o -MD -MP -MF $(DEPDIR)/drm_v4l2_demo-log.Tpo -c -o drm_v4l2_demo-log.o `test -f 'log.c' || echo '$(srcdir)/'`log.c
+	$(AM_V_at)$(am__mv) $(DEPDIR)/drm_v4l2_demo-log.Tpo $(DEPDIR)/drm_v4l2_demo-log.Po
+#	$(AM_V_CC)source='log.c' object='drm_v4l2_demo-log.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(drm_v4l2_demo_CFLAGS) $(CFLAGS) -c -o drm_v4l2_demo-log.o `test -f 'log.c' || echo '$(srcdir)/'`log.c
+
+drm_v4l2_demo-log.obj: log.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(drm_v4l2_demo_CFLAGS) $(CFLAGS) -MT drm_v4l2_demo-log.obj -MD -MP -MF $(DEPDIR)/drm_v4l2_demo-log.Tpo -c -o drm_v4l2_demo-log.obj `if test -f 'log.c'; then $(CYGPATH_W) 'log.c'; else $(CYGPATH_W) '$(srcdir)/log.c'; fi`
+	$(AM_V_at)$(am__mv) $(DEPDIR)/drm_v4l2_demo-log.Tpo $(DEPDIR)/drm_v4l2_demo-log.Po
+#	$(AM_V_CC)source='log.c' object='drm_v4l2_demo-log.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(drm_v4l2_demo_CFLAGS) $(CFLAGS) -c -o drm_v4l2_demo-log.obj `if test -f 'log.c'; then $(CYGPATH_W) 'log.c'; else $(CYGPATH_W) '$(srcdir)/log.c'; fi`
+
+drm_v4l2_demo-arg_parse.o: arg_parse.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(drm_v4l2_demo_CFLAGS) $(CFLAGS) -MT drm_v4l2_demo-arg_parse.o -MD -MP -MF $(DEPDIR)/drm_v4l2_demo-arg_parse.Tpo -c -o drm_v4l2_demo-arg_parse.o `test -f 'arg_parse.c' || echo '$(srcdir)/'`arg_parse.c
+	$(AM_V_at)$(am__mv) $(DEPDIR)/drm_v4l2_demo-arg_parse.Tpo $(DEPDIR)/drm_v4l2_demo-arg_parse.Po
+#	$(AM_V_CC)source='arg_parse.c' object='drm_v4l2_demo-arg_parse.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(drm_v4l2_demo_CFLAGS) $(CFLAGS) -c -o drm_v4l2_demo-arg_parse.o `test -f 'arg_parse.c' || echo '$(srcdir)/'`arg_parse.c
+
+drm_v4l2_demo-arg_parse.obj: arg_parse.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(drm_v4l2_demo_CFLAGS) $(CFLAGS) -MT drm_v4l2_demo-arg_parse.obj -MD -MP -MF $(DEPDIR)/drm_v4l2_demo-arg_parse.Tpo -c -o drm_v4l2_demo-arg_parse.obj `if test -f 'arg_parse.c'; then $(CYGPATH_W) 'arg_parse.c'; else $(CYGPATH_W) '$(srcdir)/arg_parse.c'; fi`
+	$(AM_V_at)$(am__mv) $(DEPDIR)/drm_v4l2_demo-arg_parse.Tpo $(DEPDIR)/drm_v4l2_demo-arg_parse.Po
+#	$(AM_V_CC)source='arg_parse.c' object='drm_v4l2_demo-arg_parse.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(drm_v4l2_demo_CFLAGS) $(CFLAGS) -c -o drm_v4l2_demo-arg_parse.obj `if test -f 'arg_parse.c'; then $(CYGPATH_W) 'arg_parse.c'; else $(CYGPATH_W) '$(srcdir)/arg_parse.c'; fi`
+
+drm_v4l2_demo-fbdev_init.o: fbdev_init.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(drm_v4l2_demo_CFLAGS) $(CFLAGS) -MT drm_v4l2_demo-fbdev_init.o -MD -MP -MF $(DEPDIR)/drm_v4l2_demo-fbdev_init.Tpo -c -o drm_v4l2_demo-fbdev_init.o `test -f 'fbdev_init.c' || echo '$(srcdir)/'`fbdev_init.c
+	$(AM_V_at)$(am__mv) $(DEPDIR)/drm_v4l2_demo-fbdev_init.Tpo $(DEPDIR)/drm_v4l2_demo-fbdev_init.Po
+#	$(AM_V_CC)source='fbdev_init.c' object='drm_v4l2_demo-fbdev_init.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(drm_v4l2_demo_CFLAGS) $(CFLAGS) -c -o drm_v4l2_demo-fbdev_init.o `test -f 'fbdev_init.c' || echo '$(srcdir)/'`fbdev_init.c
+
+drm_v4l2_demo-fbdev_init.obj: fbdev_init.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(drm_v4l2_demo_CFLAGS) $(CFLAGS) -MT drm_v4l2_demo-fbdev_init.obj -MD -MP -MF $(DEPDIR)/drm_v4l2_demo-fbdev_init.Tpo -c -o drm_v4l2_demo-fbdev_init.obj `if test -f 'fbdev_init.c'; then $(CYGPATH_W) 'fbdev_init.c'; else $(CYGPATH_W) '$(srcdir)/fbdev_init.c'; fi`
+	$(AM_V_at)$(am__mv) $(DEPDIR)/drm_v4l2_demo-fbdev_init.Tpo $(DEPDIR)/drm_v4l2_demo-fbdev_init.Po
+#	$(AM_V_CC)source='fbdev_init.c' object='drm_v4l2_demo-fbdev_init.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(drm_v4l2_demo_CFLAGS) $(CFLAGS) -c -o drm_v4l2_demo-fbdev_init.obj `if test -f 'fbdev_init.c'; then $(CYGPATH_W) 'fbdev_init.c'; else $(CYGPATH_W) '$(srcdir)/fbdev_init.c'; fi`
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique
@@ -440,15 +526,13 @@ distdir: $(DISTFILES)
 	  fi; \
 	done
 check-am: all-am
-check: $(BUILT_SOURCES)
-	$(MAKE) $(AM_MAKEFLAGS) check-am
+check: check-am
 all-am: Makefile $(PROGRAMS)
 installdirs:
 	for dir in "$(DESTDIR)$(bindir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
-install: $(BUILT_SOURCES)
-	$(MAKE) $(AM_MAKEFLAGS) install-am
+install: install-am
 install-exec: install-exec-am
 install-data: install-data-am
 uninstall: uninstall-am
@@ -478,7 +562,6 @@ distclean-generic:
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
-	-test -z "$(BUILT_SOURCES)" || rm -f $(BUILT_SOURCES)
 clean: clean-am
 
 clean-am: clean-binPROGRAMS clean-generic mostlyclean-am
@@ -548,7 +631,7 @@ ps-am:
 
 uninstall-am: uninstall-binPROGRAMS
 
-.MAKE: all check install install-am install-strip
+.MAKE: install-am install-strip
 
 .PHONY: CTAGS GTAGS TAGS all all-am check check-am clean \
 	clean-binPROGRAMS clean-generic cscopelist-am ctags ctags-am \

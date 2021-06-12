@@ -30,6 +30,31 @@ AC_CHECK_HEADER(getopt.h,
 AC_DEFINE([COPYRIGHT_YEAR], [m4_esyscmd([date +%Y])], [year in copyright message])
 
 # Checks for library functions.
+#AC_CHECK_LIB([glib-2.0], [main],, [AC_MSG_ERROR([glib library is missing])])
+#AC_CHECK_LIB([udev], [udev_new], [], [AC_MSG_ERROR([udev library is missing])])
+#AC_CHECK_LIB([drm], [main], [], [AC_MSG_ERROR([drm library is missing])])
+
+PKG_CHECK_MODULES([LIBUDEV], [libudev >= 199])
+PKG_CHECK_MODULES([GLIB], [glib-2.0 >= 2.22.0 gobject-2.0 >= 2.22.0 gio-2.0])
+
+# Options for build
+AC_ARG_ENABLE([v4l2todrm], 
+			AS_HELP_STRING([--enable-v4l2todrm], 
+							[enable data from v4l2 to drm show]),
+							AC_SUBST([v4l2todrm], [yes]))
+AC_ARG_ENABLE([debug], 
+			AS_HELP_STRING([--enable-debug], 
+							[Enable debug informations (default: Not enabled)]),
+							AC_DEFINE([DEBUG], 1,
+							[DEFINE to 1 if you have debug program.]))
+AC_ARG_ENABLE([fbdev], 
+			AS_HELP_STRING([--disable-fbdev], 
+							[enable fbdev subsystem (default: disabled)]),
+							[fbdev=no])
+AS_IF([test xno != "x$fbdev"],
+	AC_DEFINE([FBDEV], 1, [DEFINE to 1 if you have use fbdev subsystem.]))
+
+
 
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_FILES([
