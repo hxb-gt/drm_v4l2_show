@@ -4755,6 +4755,31 @@ fi
 
 
 
+# Options for build
+# Check whether --enable-v4l2todrm was given.
+if test "${enable_v4l2todrm+set}" = set; then :
+  enableval=$enable_v4l2todrm; v4l2todrm=yes
+
+fi
+
+# Check whether --enable-debug was given.
+if test "${enable_debug+set}" = set; then :
+  enableval=$enable_debug;
+$as_echo "#define DEBUG 1" >>confdefs.h
+
+fi
+
+# Check whether --enable-fbdev was given.
+if test "${enable_fbdev+set}" = set; then :
+  enableval=$enable_fbdev; fbdev=no
+fi
+
+if test xno != "x$fbdev"; then :
+
+$as_echo "#define FBDEV 1" >>confdefs.h
+
+fi
+
 ac_config_headers="$ac_config_headers config.h"
 
 ac_config_files="$ac_config_files Makefile src/Makefile lib/Makefile"
