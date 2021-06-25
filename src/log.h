@@ -21,6 +21,7 @@ int debug_level_parse(char *args);
 
 #ifdef DEBUG
 
+#if 0
 static inline void dbg_drm(const gchar *fmt, ...)	
 {	
 	#undef G_LOG_DOMAIN	
@@ -80,7 +81,7 @@ static inline void dbg_udev(const gchar *fmt, ...)
 	va_list args;
   	va_start (args, fmt);
 
-	g_debug(fmt, args);	
+	g_debug(fmt, ...);	
 	va_end (args);
 	
 	#undef G_LOG_DOMAIN		
@@ -96,7 +97,7 @@ static inline void dbg_func_line(void)
 	
 	#undef G_LOG_DOMAIN		
 }
-
+#endif
 
 #if 0
 #define dbg_drm(fmt, args...)	\

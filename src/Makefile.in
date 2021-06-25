@@ -103,6 +103,7 @@ am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am_drm_v4l2_demo_OBJECTS = drm_v4l2_demo-main.$(OBJEXT) \
 	drm_v4l2_demo-log.$(OBJEXT) drm_v4l2_demo-arg_parse.$(OBJEXT) \
+	drm_v4l2_demo-live_udev.$(OBJEXT) \
 	drm_v4l2_demo-fbdev_init.$(OBJEXT)
 drm_v4l2_demo_OBJECTS = $(am_drm_v4l2_demo_OBJECTS)
 am__DEPENDENCIES_1 =
@@ -272,7 +273,7 @@ v4l2todrm = @v4l2todrm@
 
 #fbdev subsystem
 drm_v4l2_demo_SOURCES = main.c log.c log.h arg_parse.c arg_parse.h \
-	fbdev_init.c fbdev.h
+	live_udev.c live_udev.h fbdev_init.c fbdev.h
 drm_v4l2_demo_CFLAGS = \
 	$(LIBUDEV_CFLAGS) \
 	$(GLIB_CFLAGS)
@@ -370,6 +371,7 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/drm_v4l2_demo-arg_parse.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/drm_v4l2_demo-fbdev_init.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/drm_v4l2_demo-live_udev.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/drm_v4l2_demo-log.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/drm_v4l2_demo-main.Po@am__quote@
 
@@ -428,6 +430,20 @@ drm_v4l2_demo-arg_parse.obj: arg_parse.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='arg_parse.c' object='drm_v4l2_demo-arg_parse.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(drm_v4l2_demo_CFLAGS) $(CFLAGS) -c -o drm_v4l2_demo-arg_parse.obj `if test -f 'arg_parse.c'; then $(CYGPATH_W) 'arg_parse.c'; else $(CYGPATH_W) '$(srcdir)/arg_parse.c'; fi`
+
+drm_v4l2_demo-live_udev.o: live_udev.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(drm_v4l2_demo_CFLAGS) $(CFLAGS) -MT drm_v4l2_demo-live_udev.o -MD -MP -MF $(DEPDIR)/drm_v4l2_demo-live_udev.Tpo -c -o drm_v4l2_demo-live_udev.o `test -f 'live_udev.c' || echo '$(srcdir)/'`live_udev.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/drm_v4l2_demo-live_udev.Tpo $(DEPDIR)/drm_v4l2_demo-live_udev.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='live_udev.c' object='drm_v4l2_demo-live_udev.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(drm_v4l2_demo_CFLAGS) $(CFLAGS) -c -o drm_v4l2_demo-live_udev.o `test -f 'live_udev.c' || echo '$(srcdir)/'`live_udev.c
+
+drm_v4l2_demo-live_udev.obj: live_udev.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(drm_v4l2_demo_CFLAGS) $(CFLAGS) -MT drm_v4l2_demo-live_udev.obj -MD -MP -MF $(DEPDIR)/drm_v4l2_demo-live_udev.Tpo -c -o drm_v4l2_demo-live_udev.obj `if test -f 'live_udev.c'; then $(CYGPATH_W) 'live_udev.c'; else $(CYGPATH_W) '$(srcdir)/live_udev.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/drm_v4l2_demo-live_udev.Tpo $(DEPDIR)/drm_v4l2_demo-live_udev.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='live_udev.c' object='drm_v4l2_demo-live_udev.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(drm_v4l2_demo_CFLAGS) $(CFLAGS) -c -o drm_v4l2_demo-live_udev.obj `if test -f 'live_udev.c'; then $(CYGPATH_W) 'live_udev.c'; else $(CYGPATH_W) '$(srcdir)/live_udev.c'; fi`
 
 drm_v4l2_demo-fbdev_init.o: fbdev_init.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(drm_v4l2_demo_CFLAGS) $(CFLAGS) -MT drm_v4l2_demo-fbdev_init.o -MD -MP -MF $(DEPDIR)/drm_v4l2_demo-fbdev_init.Tpo -c -o drm_v4l2_demo-fbdev_init.o `test -f 'fbdev_init.c' || echo '$(srcdir)/'`fbdev_init.c

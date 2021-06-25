@@ -1,7 +1,8 @@
 #AUTOMAKE_OPTIONS = subdir-objects
 
 bin_PROGRAMS = drm_v4l2_demo 
-drm_v4l2_demo_SOURCES = main.c log.c log.h arg_parse.c arg_parse.h 
+drm_v4l2_demo_SOURCES = main.c log.c log.h arg_parse.c arg_parse.h \
+						live_udev.c live_udev.h
 
 #fbdev subsystem
 drm_v4l2_demo_SOURCES += fbdev_init.c fbdev.h
